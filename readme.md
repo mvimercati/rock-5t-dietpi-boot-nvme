@@ -1,49 +1,70 @@
 # Guide: Installing and Booting DietPi from NVMe on Radxa Rock 5T
 
-This technical guide covers the end-to-end process of migrating DietPi to an NVMe SSD on the **Rock 5T**. It includes the essential steps for SPI flash updates, serial debugging, and correcting the Device Tree (DTB) configuration.
+This technical guide covers the end-to-end process of installing DietPi to an NVMe SSD on the **Rock 5T**. It includes the steps for SPI flash updates which enables booting from nvme, serial debugging, and correcting the Device Tree (DTB) configuration.
 
 ---
 
 ## 0. Debugging Setup (Serial Console)
 Before starting, it is highly recommended to monitor the boot process to identify any "hangs" or errors.
 
-1.  **Hardware:** Use a **USB-to-UART converter** (e.g., **CH340**).
+1.  **Hardware:** Use a **USB-to-UART converter** (e.g., **CH340**, here I used an ESP32-S3, just overkill for the scope but it includes a CH340 uart-usb converter).
 2.  **Connections:**
-    * **TX** (Board) → **RX** (Adapter)
-    * **RX** (Board) → **TX** (Adapter)
-    * **GND** (Board) → **GND** (Adapter)
-3.  **Software:** Use a serial terminal (like PuTTY or Minicom) with the following settings:
+    * **TX** (pin 8) → white line → **RX** (Adapter)
+    * **RX** (pin 10) → green line → **TX** (Adapter)
+    * **GND** (pin 6) → black line → **GND** (Adapter)
+  
+   <img width="1000" height="600" alt="immagine" src="https://github.com/user-attachments/assets/837ca6c1-d94e-4dec-ba01-3ded98c988e0" />
+
+4.  **Software:** Use a serial terminal (like PuTTY or Minicom) with the following settings:
     * **Baud rate:** `1500000` (1.5 Mbps)
     * **Data bits:** 8
     * **Stop bits:** 1
     * **Parity:** None
+    * **Flow control:** Disabled
+  
+    <img width="1000" height="600" alt="immagine" src="https://github.com/user-attachments/assets/41eb8bfe-1952-48c4-99db-6aad529c4689" />
+
 
 ---
 
 ## 1. Update SPI Flash (via Official Radxa OS)
 The SPI Flash must be updated so the board knows how to initialize the PCIe bus and boot from NVMe.
+For this step I just followed the Radxa guide here: https://docs.radxa.com/en/rock5/rock5t/getting-started/install-os/nvme
 
 1.  Flash the **official Radxa OS** to a microSD card.
 2.  Boot the Rock 5T and log in.
 3.  Run the configuration utility:
     ```bash
+    sudo apt-get update
+    sudo apt-get full-upgrade
     sudo rsetup
     ```
 4.  Navigate to **Hardware** -> **Bootloader** -> **Update SPI Flash**.
 5.  Power off the board once the update is successful.
+6.  Now the board shall be able to boot from NVME, but we have to load something in it.
 
 ---
 
-## 2. Media Preparation
-1.  **NVMe SSD:** Flash the **DietPi (Rock 5B)** image onto the SSD using a PC.
-2.  **microSD Card:** Flash the **same DietPi image** onto a microSD card. This acts as a temporary "rescue" system.
+## 2. DietPI Media Preparation
 
+1.  **microSD Card:** Flash the **DietPi image** onto a microSD card. This acts as a temporary "rescue" system. At the moment only the image for Rock 5B is available.
+    I used this one: https://dietpi.com/downloads/images/DietPi_ROCK5B-ARMv8-Trixie.img.xz
+
+3.  Start the sbc with the DietPI image on the microSD card. Follow the preliminary setup process, useless because we will repeat on the nvme.
+4.  Once we have the prompt flash the DietPI image on the nvme too. This may be done by downloading again the diet pi image.
+5.  **NVMe SSD:** Flash the **DietPi (Rock 5B)** image:
+6.  ```bash
+    wget https://dietpi.com/downloads/images/DietPi_ROCK5B-ARMv8-Trixie.img.xz
+    DietPi_ROCK5B-ARMv8-Trixie.img.xz | dd of=/dev/
+    xzcat DietPi_ROCK5B-ARMv8-Trixie.img.xz | dd of=/dev/nvme0n1 bs=64M status=progress
+    ```
+   
 ---
 
-## 3. The "Bridge" Boot (Fixing the NVMe from SD)
+## 3. Fixing the device tree
 By default, the Rock 5B image tries to boot using a 5B Device Tree, which causes a "PCIe Link Fail" on the Rock 5T. We must fix this by booting from the SD card first.
 
-1.  Insert both the **microSD** and the **NVMe** into the Rock 5T.
+1.  Insert both the dietPI **microSD** and the **NVMe** into the Rock 5T.
 2.  Connect your Serial Adapter to monitor the logs.
 3.  Power on. The system will boot from the SD card.
 4.  Log in as `root` (password: `dietpi`).
