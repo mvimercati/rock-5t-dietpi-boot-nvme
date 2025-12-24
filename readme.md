@@ -113,7 +113,5 @@ Now, modify the configuration on the SSD to match the specific hardware of the R
 1.  **Remove the microSD card.**
 2.  Power on the Rock 5T.
 3.  Watch your Serial Console. You should see the PCIe link successfully initialize, followed by the full DietPi boot sequence from the NVMe SSD.
+4.  Proceed with the DietPI setup (Started now from the beginning, as we are booting from SSD)
 
----
-
-**Note:** If `rk3588-rock-5t.dtb` is missing from the DietPi image, copy it from the official Radxa SD card (`/boot/dtb/rockchip/`) into the same folder on the NVMe partition.
