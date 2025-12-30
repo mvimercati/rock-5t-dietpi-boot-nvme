@@ -55,7 +55,6 @@ For this step I just followed the Radxa guide here: https://docs.radxa.com/en/ro
 5.  **NVMe SSD:** Flash the **DietPi (Rock 5B)** image:
 6.  ```bash
     wget https://dietpi.com/downloads/images/DietPi_ROCK5B-ARMv8-Trixie.img.xz
-    DietPi_ROCK5B-ARMv8-Trixie.img.xz | dd of=/dev/
     xzcat DietPi_ROCK5B-ARMv8-Trixie.img.xz | dd of=/dev/nvme0n1 bs=64M status=progress
     ```
    
