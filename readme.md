@@ -74,16 +74,13 @@ By default, the Rock 5B image tries to boot using a 5B Device Tree, which causes
     mount /dev/nvme0n1p1 /mnt
     ```
 
----
-
-## 4. Edit NVMe Configuration
 Now, modify the configuration on the SSD to match the specific hardware of the Rock 5T.
 
-1.  Open the environment file on the **mounted NVMe**:
+6.  Open the environment file on the **mounted NVMe**:
     ```bash
     nano /mnt/boot/dietpiEnv.txt
     ```
-2.  **Apply the following changes:**
+7.  **Apply the following changes:**
     * **fdtfile:** Change to `rockchip/rk3588-rock-5t.dtb`
     * **overlay_prefix:** Change to start with `rock-5t`
     * **extraargs:** Add `rootwait` to ensure the kernel waits for the PCIe bus to be ready.
@@ -99,8 +96,8 @@ Now, modify the configuration on the SSD to match the specific hardware of the R
     fdtfile=rockchip/rk3588-rock-5t.dtb
     ```
 
-3.  Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X`).
-4.  Unmount the drive and power off:
+8.  Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X`).
+9.  Unmount the drive and power off:
     ```bash
     umount /mnt
     poweroff
