@@ -112,4 +112,4 @@ Now, modify the configuration on the SSD to match the specific hardware of the R
 4.  Proceed with the DietPI setup (Started now from the beginning, as we are booting from SSD)
 
 ## 6. After one year.... memory problems!
-See [here](memory_problems.md)
+See [here](#1)
