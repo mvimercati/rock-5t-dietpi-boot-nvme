@@ -111,3 +111,5 @@ Now, modify the configuration on the SSD to match the specific hardware of the R
 3.  Watch your Serial Console. You should see the PCIe link successfully initialize, followed by the full DietPi boot sequence from the NVMe SSD.
 4.  Proceed with the DietPI setup (Started now from the beginning, as we are booting from SSD)
 
+## 6. After one year.... memory problems!
+See [here](memory_problems.md)
